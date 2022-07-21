@@ -10,12 +10,13 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include "strrep.h"
 
 
 #define EMPTY_STRING	"\0"
 
 
-static const char html_content_1[] = {
+char html_content_1[] = {
 	"<!DOCTYPE html>\n"
 	"<html>\n"
 	"\t<head>\n"
@@ -25,16 +26,20 @@ static const char html_content_1[] = {
 	"\t\t<p>"
 };
 
-static const char html_content_2[] = {
-	"\t\t</p>\n"
+char html_content_2[] = {
+	"</p>\n"
 	"\t</body>\n"
 	"</html>\n\n\n"
 };
 
 
 int main(int argc, char *argv[]) {
-	char *page_title = EMPTY_STRING;
+	char text_file_name[256] = EMPTY_STRING,
+		 html_file_name[256] = EMPTY_STRING,
+		 page_title[256] = EMPTY_STRING;
 	int getopt_status, option_index = 0;
+
+	strcpy(text_file_name, argv[1]);
 
 	while(true) {
         static struct option long_options[] = {
@@ -56,6 +61,10 @@ int main(int argc, char *argv[]) {
 				printf("Show some help.\n");
 				goto skipotherprocess;
 			case 't':
+				if (argc == 3) {
+					fprintf(stderr, "make-th\nError: No text file is specified for convertion.\n");
+					goto maketh_error;
+				}
 				strcpy(page_title, optarg);
 				break;
 			case 'v':
@@ -67,20 +76,24 @@ int main(int argc, char *argv[]) {
 
 
 	FILE *input_file, *output_file;
-	if (!(input_file = fopen(argv[1], "r"))) {
-		fprintf(stderr, "make-th\nError: Failed to open file '%s' for reading.\n", argv[1]);
+	if (!(input_file = fopen(text_file_name, "r"))) {
+		fprintf(stderr, "make-th\nError: Failed to open file '%s' for reading.\n", text_file_name);
 		goto maketh_error;
 	}
-	if (!(output_file = fopen("the.html", "a"))) {
+
+	strcpy(html_file_name, strrep(text_file_name, "txt", "html"));
+	if (!(output_file = fopen(html_file_name, "a"))) {
 		fprintf(stderr, "make-th\nError: Failed to create file 'the.html' for appending.\n");
 		goto maketh_error;
 	}
 
-	char text_line[2][1000];
+	char text_line[2][1000], *output;
 	int str_index = 0, total_str_len = 0;
 
 	// Write to stream the initial part of the html file.
-	fprintf(output_file, "%s", html_content_1);
+	output = strrep(html_content_1, "My Webpage", page_title);
+	fprintf(output_file, "%s", output);
+	output = EMPTY_STRING;
 
 	strcpy(text_line[0], EMPTY_STRING);
 	strcpy(text_line[1], EMPTY_STRING);
@@ -96,16 +109,27 @@ int main(int argc, char *argv[]) {
 			strcpy(buffer, text_line[0]);
 			strcat(buffer, text_line[1]);
 
-			// convert text file to html
-			fprintf(output_file, "%s", buffer);
-
+			// Convert plain text paragraphs to html formatted paragraph
+			if ((output = strrep(buffer, "\n\n", "</p>\n\n\t\t<p>"))) {
+				strcpy(buffer, output);
+				fputs(buffer, output_file);
+			}
+			else {
+				fputs(text_line[0], output_file);
+			}
 
 			strcpy(buffer, EMPTY_STRING);
 			strcpy(text_line[0], EMPTY_STRING);
+			if (strcmp(text_line[1], "\n") != 0) {
+				strcpy(text_line[0], text_line[1]);
+				str_index = 1;
+				total_str_len = strlen(text_line[0]);
+			}
+			else {
+				str_index = 0;
+				total_str_len = 0;
+			}
 			strcpy(text_line[1], EMPTY_STRING);
-
-			total_str_len = 0;
-			str_index = 0;
 		}
 	}
 
