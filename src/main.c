@@ -45,6 +45,14 @@ static void help(void) {
 }
 
 
+static void version(void) {
+	printf("\nmake-th version 0.1.0-alpha.1, Copyright (C) 2022 Radoq10288\n"
+			"make-th comes with ABSOLUTELY NO WARRANTY; for details type `show w'.\n"
+			"This is free software, and you are welcome to redistribute it\n"
+			"under certain conditions; type `show c' for details.\n");
+}
+
+
 int main(int argc, char *argv[]) {
 	char text_file_name[256] = EMPTY_STRING,
 		 html_file_name[256] = EMPTY_STRING,
@@ -84,8 +92,7 @@ int main(int argc, char *argv[]) {
 				strcpy(page_title, optarg);
 				break;
 			case 'v':
-				//version();
-				printf("Show current version.\n");
+				version();
 				goto skipotherprocess;
 			case ':':
 				if (optopt == 0) {
