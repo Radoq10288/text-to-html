@@ -57,6 +57,7 @@ tar-debug:
 	tar -cvf maketh-win-debug.tar bin/* COPYING README.md
 
 install:
+	install -d ~/local/bin
 	install -d ~/local/share/make-th
 	install bin/make-th ~/local/bin/make-th
 	install COPYING ~/local/share/make-th/
