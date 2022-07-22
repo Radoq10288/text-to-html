@@ -44,7 +44,7 @@ int main(int argc, char *argv[]) {
 	while(true) {
         static struct option long_options[] = {
             {"help",		no_argument,		0,  	'h'},
-            {"title",		required_argument,	0,  	't'},
+            {"title",		required_argument,	0,  	0},
             {"version",		no_argument,		0,		'v'},
             {0,				0,					0,		0}
         };
@@ -60,6 +60,7 @@ int main(int argc, char *argv[]) {
 				//help();
 				printf("Show some help.\n");
 				goto skipotherprocess;
+			case 0:
 			case 't':
 				if (argc == 3) {
 					fprintf(stderr, "make-th\nError: No text file is specified for convertion.\n");
@@ -71,6 +72,14 @@ int main(int argc, char *argv[]) {
 				//version();
 				printf("Show current version.\n");
 				goto skipotherprocess;
+			case ':':
+				if (optopt == 0) {
+					fprintf(stderr, "make-th\nError: The long option --%s requires an argument.\n", long_options[option_index].name);
+				}
+				else {
+					fprintf(stderr, "make-th\nError: The short option -%c requires an argument.\n", optopt);
+				}
+				goto maketh_error;
         }
     }
 
