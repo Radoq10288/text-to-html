@@ -39,6 +39,10 @@ int main(int argc, char *argv[]) {
 		 page_title[256] = EMPTY_STRING;
 	int getopt_status, option_index = 0;
 
+	if (argc == 1) {
+		fprintf(stderr, "make-th\nError: No argument or option specified.\nInfo: Type 'make-th -h/--help' to see usage and available options.");
+		goto maketh_error;
+	}
 	strcpy(text_file_name, argv[1]);
 
 	while(true) {
