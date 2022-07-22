@@ -33,6 +33,18 @@ char html_content_2[] = {
 };
 
 
+static void help(void) {
+	printf("\nUsage:\n"
+			"    make-th [Text file filename] [Option]    For converting text file to html.\n"
+			"    make-th [Option]                         For other options to show help, version, etc.\n"
+			"\n"
+			"Options:\n"
+			"    -h                 Show this help.\n"
+			"    -t, --title        Set the title of the html file.\n"
+			"    -v, --version      Show current version of this software.\n");
+}
+
+
 int main(int argc, char *argv[]) {
 	char text_file_name[256] = EMPTY_STRING,
 		 html_file_name[256] = EMPTY_STRING,
@@ -61,8 +73,7 @@ int main(int argc, char *argv[]) {
 
 		switch(getopt_status) {
 			case 'h':
-				//help();
-				printf("Show some help.\n");
+				help();
 				goto skipotherprocess;
 			case 1:
 			case 't':
