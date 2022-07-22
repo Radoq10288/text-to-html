@@ -2,6 +2,7 @@
 #include <stdbool.h>
 #include <string.h>
 #include <stdlib.h>
+#include "strrep.h"
 
 
 #define EMPTY_STRING	"\0"
