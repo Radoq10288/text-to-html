@@ -44,7 +44,7 @@ int main(int argc, char *argv[]) {
 	while(true) {
         static struct option long_options[] = {
             {"help",		no_argument,		0,  	'h'},
-            {"title",		required_argument,	0,  	0},
+            {"title",		required_argument,	0,  	1},
             {"version",		no_argument,		0,		'v'},
             {0,				0,					0,		0}
         };
@@ -60,7 +60,7 @@ int main(int argc, char *argv[]) {
 				//help();
 				printf("Show some help.\n");
 				goto skipotherprocess;
-			case 0:
+			case 1:
 			case 't':
 				if (argc == 3) {
 					fprintf(stderr, "make-th\nError: No text file is specified for convertion.\n");
@@ -79,6 +79,16 @@ int main(int argc, char *argv[]) {
 				else {
 					fprintf(stderr, "make-th\nError: The short option -%c requires an argument.\n", optopt);
 				}
+				goto maketh_error;
+			case 0:
+			case '?':
+				if (optopt != 0) {
+					fprintf(stderr, "make-th\nError: Unknown short option '-%c'.\n", optopt);
+				}
+				else {
+					fprintf(stderr, "make-th\nError: Unknown long option '%s'.\n", argv[(optind - 1)]);
+				}
+				fprintf(stderr, "Info: Type 'make-th -h/--help' to see available options.\n");
 				goto maketh_error;
         }
     }
