@@ -3,7 +3,7 @@ OBJDIR=obj
 SRCDIR=src
 TESTDIR=tests
 
-BIN=$(BINDIR)/make-th
+BIN=$(BINDIR)/make-t2h
 OBJ=$(OBJDIR)/*.o
 CFILES=$(SRCDIR)/*.c
 
@@ -43,29 +43,32 @@ clean:
 
 distclean: clean
 	rmdir $(OBJDIR) $(BINDIR)
-	rm maketh-win-source.tar
+	rm make-t2h-mingw32-source.tar
+	rm make-t2h-mingw32-release.tar
+	rm make-t2h-mingw32-debug.tar
 
 clean-test:
 	rm $(TESTDIR)/*.o $(TESTDIR)/bin/*
 
 tar-source:
-	tar -cvf maketh-win-source.tar include/sput-1.4.0/* src/* tests/* .gitignore COPYING Makefile README.md run-test.sh
+	tar -cvf make-t2h-mingw32-source.tar include/sput-1.4.0/* src/* tests/* .gitignore COPYING Makefile README.md run-test.sh
 
-tar-release: tar-debug
+tar-release:
+	tar -cvf make-t2h-mingw32-release.tar bin/* COPYING README.md
 
 tar-debug:
-	tar -cvf maketh-win-debug.tar bin/* COPYING README.md
+	tar -cvf make-t2h-mingw32-debug.tar bin/* COPYING README.md
 
 install:
 	install -d ~/local/bin
 	install -d ~/local/share/make-th
-	install bin/make-th ~/local/bin/make-th
-	install COPYING ~/local/share/make-th/
-	install README.md ~/local/share/make-th/
+	install bin/make-t2h ~/local/bin/make-t2h
+	install COPYING ~/local/share/make-t2h/
+	install README.md ~/local/share/make-t2h/
 
 uninstall:
-	rm -fr ~/local/bin/make-th
-	rm ~/local/share/make-th/*
-	rmdir ~/local/share/make-th
+	rm -fr ~/local/bin/make-t2h
+	rm ~/local/share/make-t2h/*
+	rmdir ~/local/share/make-t2h
 
 

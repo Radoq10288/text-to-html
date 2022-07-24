@@ -8,7 +8,7 @@ A program that accept a text (\*.txt) file and convert it to html (\*.html) file
 To convert a text file to html file:
 
 ```
-$>make-th <filename of text file> --title "My Webpage"
+$>make-t2h <filename of text file> --title "My Webpage"
 ```
 
 __Options:__<br>
