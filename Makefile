@@ -61,7 +61,7 @@ tar-debug:
 
 install:
 	install -d ~/local/bin
-	install -d ~/local/share/make-th
+	install -d ~/local/share/make-t2h
 	install bin/make-t2h ~/local/bin/make-t2h
 	install COPYING ~/local/share/make-t2h/
 	install README.md ~/local/share/make-t2h/

@@ -35,8 +35,8 @@ char html_content_2[] = {
 
 static void help(void) {
 	printf("\nUsage:\n"
-			"    make-th [Text file filename] [Option]    For converting text file to html.\n"
-			"    make-th [Option]                         For other options to show help, version, etc.\n"
+			"    make-t2h [Text file filename] [Option]    For converting text file to html.\n"
+			"    make-t2h [Option]                         For other options to show help, version, etc.\n"
 			"\n"
 			"Options:\n"
 			"    -h                 Show this help.\n"
@@ -46,8 +46,8 @@ static void help(void) {
 
 
 static void version(void) {
-	printf("\nmake-th version 0.1.0-alpha.1, Copyright (C) 2022 Radoq10288\n"
-			"make-th comes with ABSOLUTELY NO WARRANTY; for details type `show w'.\n"
+	printf("\nmake-t2h version 0.1.0-alpha.1, Copyright (C) 2022 Radoq10288\n"
+			"make-t2h comes with ABSOLUTELY NO WARRANTY; for details type `show w'.\n"
 			"This is free software, and you are welcome to redistribute it\n"
 			"under certain conditions; type `show c' for details.\n");
 }
@@ -60,8 +60,8 @@ int main(int argc, char *argv[]) {
 	int getopt_status, option_index = 0;
 
 	if (argc == 1) {
-		fprintf(stderr, "make-th\nError: No argument or option specified.\nInfo: Type 'make-th -h/--help' to see usage and available options.");
-		goto maketh_error;
+		fprintf(stderr, "make-t2h\nError: No argument or option specified.\nInfo: Type 'make-t2h -h/--help' to see usage and available options.");
+		goto maket2h_error;
 	}
 	strcpy(text_file_name, argv[1]);
 
@@ -86,8 +86,8 @@ int main(int argc, char *argv[]) {
 			case 1:
 			case 't':
 				if (argc == 3) {
-					fprintf(stderr, "make-th\nError: No text file is specified for convertion.\n");
-					goto maketh_error;
+					fprintf(stderr, "make-t2h\nError: No text file is specified for convertion.\n");
+					goto maket2h_error;
 				}
 				strcpy(page_title, optarg);
 				break;
@@ -96,42 +96,42 @@ int main(int argc, char *argv[]) {
 				goto skipotherprocess;
 			case ':':
 				if (optopt == 0) {
-					fprintf(stderr, "make-th\nError: The long option --%s requires an argument.\n", long_options[option_index].name);
+					fprintf(stderr, "make-t2h\nError: The long option --%s requires an argument.\n", long_options[option_index].name);
 				}
 				else {
-					fprintf(stderr, "make-th\nError: The short option -%c requires an argument.\n", optopt);
+					fprintf(stderr, "make-t2h\nError: The short option -%c requires an argument.\n", optopt);
 				}
-				goto maketh_error;
+				goto maket2h_error;
 			case 0:
 			case '?':
 				if (optopt != 0) {
-					fprintf(stderr, "make-th\nError: Unknown short option '-%c'.\n", optopt);
+					fprintf(stderr, "make-t2h\nError: Unknown short option '-%c'.\n", optopt);
 				}
 				else {
-					fprintf(stderr, "make-th\nError: Unknown long option '%s'.\n", argv[(optind - 1)]);
+					fprintf(stderr, "make-t2h\nError: Unknown long option '%s'.\n", argv[(optind - 1)]);
 				}
-				fprintf(stderr, "Info: Type 'make-th -h/--help' to see available options.\n");
-				goto maketh_error;
+				fprintf(stderr, "Info: Type 'make-t2h -h/--help' to see available options.\n");
+				goto maket2h_error;
         }
     }
 
 
 	FILE *input_file, *output_file;
 	if (!(input_file = fopen(text_file_name, "r"))) {
-		fprintf(stderr, "make-th\nError: Failed to open file '%s' for reading.\n", text_file_name);
-		goto maketh_error;
+		fprintf(stderr, "make-t2h\nError: Failed to open file '%s' for reading.\n", text_file_name);
+		goto maket2h_error;
 	}
 
 	strcpy(html_file_name, strrep(text_file_name, "txt", "html"));
 	if (!fopen(html_file_name, "r")) {
 		if (!(output_file = fopen(html_file_name, "a"))) {
 			fprintf(stderr, "make-t2h\nError: Failed to create file '%s'.\n", html_file_name);
-			goto maketh_error;
+			goto maket2h_error;
 		}
 	}
 	else {
 		fprintf(stderr, "make-t2h\nError: File '%s' already exist!\n", html_file_name);
-		goto maketh_error;
+		goto maket2h_error;
 	}
 
 	char text_line[2][1000], *output;
@@ -189,7 +189,7 @@ int main(int argc, char *argv[]) {
 
     return 0;
 
-	maketh_error:;
+	maket2h_error:;
 	return 1;
 }
 
