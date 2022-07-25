@@ -123,8 +123,14 @@ int main(int argc, char *argv[]) {
 	}
 
 	strcpy(html_file_name, strrep(text_file_name, "txt", "html"));
-	if (!(output_file = fopen(html_file_name, "a"))) {
-		fprintf(stderr, "make-th\nError: Failed to create file 'the.html' for appending.\n");
+	if (!fopen(html_file_name, "r")) {
+		if (!(output_file = fopen(html_file_name, "a"))) {
+			fprintf(stderr, "make-t2h\nError: Failed to create file '%s'.\n", html_file_name);
+			goto maketh_error;
+		}
+	}
+	else {
+		fprintf(stderr, "make-t2h\nError: File '%s' already exist!\n", html_file_name);
 		goto maketh_error;
 	}
 
