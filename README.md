@@ -13,7 +13,7 @@ read <a target="_blank" href="https://opensource.com/article/20/8/gnu-windows-mi
 <br><br>
 
 ## How to build, compile, and install
-To build, compile, and install *cpps*, just run the following command:<br>
+To build, compile, and install *make-t2h*, just run the following command:<br>
 
 ```
 $>make
@@ -53,9 +53,30 @@ __Options:__<br>
 * -h, \--help = show some text that tells how to use the program.<br>
 * -v, \--version = show the current version of the program.<br>
 <br>
-
 __Note:__<br>
 If '-t\--title' option is omitted, it will take a default title of 'My Webpage'.
+<br><br>
+
+## Simple pattern to follow
+To properly convert a text file to html, strictly follow this one very simple
+rule:<br>
+<br>
+```
+"Provide a single empty line between paragraph"
+```
+
+For a sample, copy & paste this three paragraph ramdom text I get somewhere out
+there, to any text editor and save it. And try to convert this to an html file.<br>
+```
+Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Velit scelerisque in dictum non consectetur a erat. Sit amet justo donec enim diam vulputate. Id aliquet lectus proin nibh nisl condimentum id venenatis a. Eget gravida cum sociis natoque penatibus et magnis dis. Habitant morbi tristique senectus et netus et. Interdum consectetur libero id faucibus nisl tincidunt eget nullam. Aliquam purus sit amet luctus. Fringilla ut morbi tincidunt augue interdum velit. Neque sodales ut etiam sit. Quam viverra orci sagittis eu volutpat odio facilisis mauris. Ornare suspendisse sed nisi lacus sed. Iaculis at erat pellentesque adipiscing commodo elit at imperdiet dui. Quam nulla porttitor massa id neque aliquam vestibulum morbi. Dignissim diam quis enim lobortis scelerisque fermentum dui faucibus. Turpis egestas integer eget aliquet.
+
+In nisl nisi scelerisque eu ultrices vitae auctor eu. Dolor sit amet consectetur adipiscing elit duis. Tortor dignissim convallis aenean et tortor at. Iaculis at erat pellentesque adipiscing commodo. Viverra suspendisse potenti nullam ac tortor. Elementum nibh tellus molestie nunc non blandit massa enim. Ultricies integer quis auctor elit sed. Varius vel pharetra vel turpis nunc eget lorem dolor. Sit amet massa vitae tortor condimentum. Adipiscing elit ut aliquam purus sit amet luctus venenatis lectus. Nascetur ridiculus mus mauris vitae ultricies leo integer.
+
+Urna nunc id cursus metus. Id leo in vitae turpis massa. Blandit turpis cursus in hac habitasse platea. Feugiat sed lectus vestibulum mattis ullamcorper. Diam sit amet nisl suscipit adipiscing bibendum est. Enim nunc faucibus a pellentesque sit amet porttitor eget dolor. Enim eu turpis egestas pretium aenean pharetra. Amet mattis vulputate enim nulla aliquet. Tristique et egestas quis ipsum suspendisse ultrices gravida dictum fusce. Risus commodo viverra maecenas accumsan lacus vel. Eu mi bibendum neque egestas congue quisque egestas diam in. Fermentum odio eu feugiat pretium nibh ipsum consequat.
+
+```
+
+Observe properly the empty lines between paragraphs. This will be used by the program to identify where the opening \<p\> tag and closing \</p\> tag will be placed.<br>
 <br><br>
 
 ## About
