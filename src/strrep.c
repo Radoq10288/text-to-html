@@ -1,10 +1,63 @@
 #include <stdbool.h>
+#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include "strrep.h"
 
 
 #define EMPTY_STRING	"\0"
+
+
+int file_strrep(const char *input_file_name, FILE *output_file, const char *old_string, const char *new_string) {
+	FILE *input_file;
+	if (!(input_file = fopen(input_file_name, "r"))) {
+		return EXIT_FAILURE;
+	}
+
+	char text_line[2][1000], *output;
+	int str_index = 0, total_str_len = 0;
+
+	strcpy(text_line[0], EMPTY_STRING);
+	strcpy(text_line[1], EMPTY_STRING);
+	while (true) {
+		if (feof(input_file)) {break;}
+		fgets(text_line[str_index], 1000, input_file);
+		total_str_len += strlen(text_line[str_index]);
+		str_index++;
+
+		if (str_index == 2) {
+			char buffer[total_str_len];
+
+			strcpy(buffer, text_line[0]);
+			strcat(buffer, text_line[1]);
+
+			// Replace old_string with new_string
+			if ((output = strrep(buffer, old_string, new_string))) {
+				strcpy(buffer, output);
+				fputs(buffer, output_file);
+			}
+			else {
+				fputs(text_line[0], output_file);
+			}
+
+			strcpy(buffer, EMPTY_STRING);
+			strcpy(text_line[0], EMPTY_STRING);
+			if (strcmp(text_line[1], "\n") != 0) {
+				strcpy(text_line[0], text_line[1]);
+				str_index = 1;
+				total_str_len = strlen(text_line[0]);
+			}
+			else {
+				str_index = 0;
+				total_str_len = 0;
+			}
+			strcpy(text_line[1], EMPTY_STRING);
+		}
+	}
+
+	fclose(input_file);
+	return EXIT_SUCCESS;
+}
 
 
 static char *result_string;

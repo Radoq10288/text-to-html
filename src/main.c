@@ -16,17 +16,15 @@
 #define EMPTY_STRING	"\0"
 
 
-char html_content_1[] = {
+char html_content[][150] = {
 	"<!DOCTYPE html>\n"
 	"<html>\n"
 	"\t<head>\n"
 	"\t\t<title>My Webpage</title>\n"
 	"\t</head>\n"
 	"\t<body>\n"
-	"\t\t<p>"
-};
+	"\t\t<p>",
 
-char html_content_2[] = {
 	"</p>\n"
 	"\t</body>\n"
 	"</html>\n\n\n"
@@ -39,7 +37,7 @@ static void help(void) {
 			"    make-t2h [Option]                         For other options to show help, version, etc.\n"
 			"\n"
 			"Options:\n"
-			"    -h                 Show this help.\n"
+			"    -h, --help         Show this help.\n"
 			"    -t, --title        Set the title of the html file.\n"
 			"    -v, --version      Show current version of this software.\n");
 }
@@ -115,12 +113,7 @@ int main(int argc, char *argv[]) {
         }
     }
 
-
-	FILE *input_file, *output_file;
-	if (!(input_file = fopen(text_file_name, "r"))) {
-		fprintf(stderr, "make-t2h\nError: Failed to open file '%s' for reading.\n", text_file_name);
-		goto maket2h_error;
-	}
+	FILE *output_file;
 
 	strcpy(html_file_name, strrep(text_file_name, "txt", "html"));
 	if (!fopen(html_file_name, "r")) {
@@ -132,58 +125,23 @@ int main(int argc, char *argv[]) {
 	else {
 		fprintf(stderr, "make-t2h\nError: File '%s' already exist!\n", html_file_name);
 		goto maket2h_error;
-	}
-
-	char text_line[2][1000], *output;
-	int str_index = 0, total_str_len = 0;
+	}	
 
 	// Write to stream the initial part of the html file.
-	output = strrep(html_content_1, "My Webpage", page_title);
-	fprintf(output_file, "%s", output);
+	char  *output;
+	output = strrep(html_content[0], "My Webpage", page_title);
+	fputs(output, output_file);
 	output = EMPTY_STRING;
 
-	strcpy(text_line[0], EMPTY_STRING);
-	strcpy(text_line[1], EMPTY_STRING);
-	while (true) {
-		if (feof(input_file)) {break;}
-		fgets(text_line[str_index], 1000, input_file);
-		total_str_len += strlen(text_line[str_index]);
-		str_index++;
-
-		if (str_index == 2) {
-			char buffer[total_str_len];
-
-			strcpy(buffer, text_line[0]);
-			strcat(buffer, text_line[1]);
-
-			// Convert plain text paragraphs to html formatted paragraph
-			if ((output = strrep(buffer, "\n\n", "</p>\n\n\t\t<p>"))) {
-				strcpy(buffer, output);
-				fputs(buffer, output_file);
-			}
-			else {
-				fputs(text_line[0], output_file);
-			}
-
-			strcpy(buffer, EMPTY_STRING);
-			strcpy(text_line[0], EMPTY_STRING);
-			if (strcmp(text_line[1], "\n") != 0) {
-				strcpy(text_line[0], text_line[1]);
-				str_index = 1;
-				total_str_len = strlen(text_line[0]);
-			}
-			else {
-				str_index = 0;
-				total_str_len = 0;
-			}
-			strcpy(text_line[1], EMPTY_STRING);
-		}
+	// Convert text file to html file
+	if (file_strrep(text_file_name, output_file, "\n\n", "</p>\n\n\t\t<p>") != 0) {
+		fprintf(stderr, "make-t2h\nError: Failed to open file '%s' for reading.\n", text_file_name);
+		goto maket2h_error;
 	}
 
 	// Write to stream the last part of the html file.
-	fprintf(output_file, "%s", html_content_2);
+	fputs(html_content[1], output_file);
 
-	fclose(input_file);
 	fclose(output_file);
 	skipotherprocess:;
 
