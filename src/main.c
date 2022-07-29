@@ -67,7 +67,7 @@ int main(int argc, char *argv[]) {
 	int getopt_status, html_content_index = 0, option_index = 0;
 
 	if (argc == 1) {
-		fprintf(stderr, "make-t2h\nError: No argument or option specified.\nInfo: Type 'make-t2h -h/--help' to see usage and available options.");
+		fprintf(stderr, "make-t2h\nError: No argument or option specified.\nInfo: Type 'make-t2h -h/--help' to see usage and available options.\n");
 		goto maket2h_error;
 	}
 	strcpy(text_file_name, argv[1]);
@@ -127,9 +127,16 @@ int main(int argc, char *argv[]) {
         }
     }
 
+	char *result = EMPTY_STRING;
 	FILE *output_file;
 
-	strcpy(html_file_name, strrep(text_file_name, "txt", file_extension));
+	if ((result = strrep(text_file_name, "txt", file_extension)) == NULL) {
+		fprintf(stderr, "make-t2h\nError: Can not convert the file '%s'!\n"
+						"info: Only files with '.txt' extension is accepted.\n", text_file_name);
+		goto maket2h_error;
+	}
+	strcpy(html_file_name, result);
+
 	if (!fopen(html_file_name, "r")) {
 		if (!(output_file = fopen(html_file_name, "a"))) {
 			fprintf(stderr, "make-t2h\nError: Failed to create file '%s'.\n", html_file_name);
