@@ -93,7 +93,7 @@ char* strrep(const char *input_string, const char *old_string, const char *new_s
 		strncat(buffer, &input_string[char_index], 1);
 
 		if (strcmp(old_string, buffer) == 0) {
-			strncat(result_string, new_string, new_str_size);
+			strcat(result_string, new_string);
 			strcpy(buffer, EMPTY_STRING);
 			is_old_string_found = true;
 			buffer_count -= 1;
