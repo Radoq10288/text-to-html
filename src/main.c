@@ -25,6 +25,14 @@ char html_content[][150] = {
 	"\t<body>\n"
 	"\t\t<p>",
 
+	"<?xml version='1.0' encoding='utf-8'?>\n"
+	"<html xmlns=\"http://www.w3.org/1999/xhtml\">\n"
+	"\t<head>\n"
+	"\t\t<title>My Webpage</title>\n"
+	"\t</head>\n"
+	"\t<body>\n"
+	"\t\t<p>",
+
 	"</p>\n"
 	"\t</body>\n"
 	"</html>\n\n\n"
@@ -52,10 +60,11 @@ static void version(void) {
 
 
 int main(int argc, char *argv[]) {
-	char text_file_name[256] = EMPTY_STRING,
+	char file_extension[6] = "html",
 		 html_file_name[256] = EMPTY_STRING,
-		 page_title[256] = EMPTY_STRING;
-	int getopt_status, option_index = 0;
+		 page_title[256] = EMPTY_STRING,
+		 text_file_name[256] = EMPTY_STRING;
+	int getopt_status, html_content_index = 0, option_index = 0;
 
 	if (argc == 1) {
 		fprintf(stderr, "make-t2h\nError: No argument or option specified.\nInfo: Type 'make-t2h -h/--help' to see usage and available options.");
@@ -68,6 +77,7 @@ int main(int argc, char *argv[]) {
             {"help",		no_argument,		0,  	'h'},
             {"title",		required_argument,	0,  	1},
             {"version",		no_argument,		0,		'v'},
+            {"xhtml",		no_argument,		0,		2},
             {0,				0,					0,		0}
         };
 
@@ -88,6 +98,10 @@ int main(int argc, char *argv[]) {
 					goto maket2h_error;
 				}
 				strcpy(page_title, optarg);
+				break;
+			case 2:
+				strcpy(file_extension, "xhtml");
+				html_content_index++;
 				break;
 			case 'v':
 				version();
@@ -115,7 +129,7 @@ int main(int argc, char *argv[]) {
 
 	FILE *output_file;
 
-	strcpy(html_file_name, strrep(text_file_name, "txt", "html"));
+	strcpy(html_file_name, strrep(text_file_name, "txt", file_extension));
 	if (!fopen(html_file_name, "r")) {
 		if (!(output_file = fopen(html_file_name, "a"))) {
 			fprintf(stderr, "make-t2h\nError: Failed to create file '%s'.\n", html_file_name);
@@ -129,7 +143,7 @@ int main(int argc, char *argv[]) {
 
 	// Write to stream the initial part of the html file.
 	char  *output;
-	output = strrep(html_content[0], "My Webpage", page_title);
+	output = strrep(html_content[html_content_index], "My Webpage", page_title);
 	fputs(output, output_file);
 	output = EMPTY_STRING;
 
@@ -140,7 +154,7 @@ int main(int argc, char *argv[]) {
 	}
 
 	// Write to stream the last part of the html file.
-	fputs(html_content[1], output_file);
+	fputs(html_content[2], output_file);
 
 	fclose(output_file);
 	skipotherprocess:;
