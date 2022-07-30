@@ -52,7 +52,7 @@ static void help(void) {
 
 
 static void version(void) {
-	printf("\nmake-t2h version 0.1.0-alpha.1, Copyright (C) 2022 Radoq10288\n"
+	printf("\nmake-t2h version 0.1.3-alpha.2, Copyright (C) 2022 Radoq10288\n"
 			"make-t2h comes with ABSOLUTELY NO WARRANTY; for details type `show w'.\n"
 			"This is free software, and you are welcome to redistribute it\n"
 			"under certain conditions; type `show c' for details.\n");
