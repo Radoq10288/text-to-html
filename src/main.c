@@ -127,10 +127,12 @@ int main(int argc, char *argv[]) {
         }
     }
 
-	char *result = EMPTY_STRING;
+	char result[256];
 	FILE *output_file;
 
-	if ((result = strrep(text_file_name, "txt", file_extension)) == NULL) {
+	strcpy(result, EMPTY_STRING);
+	strrep(text_file_name, "txt", file_extension, result);
+	if (result == NULL) {
 		fprintf(stderr, "make-t2h\nError: Can not convert the file '%s'!\n"
 						"info: Only files with '.txt' extension is accepted.\n", text_file_name);
 		goto maket2h_error;
@@ -149,10 +151,10 @@ int main(int argc, char *argv[]) {
 	}	
 
 	// Write to stream the initial part of the html file.
-	char  *output;
-	output = strrep(html_content[html_content_index], "My Webpage", page_title);
+	char output[150];
+	strrep(html_content[html_content_index], "My Webpage", page_title, output);
 	fputs(output, output_file);
-	output = EMPTY_STRING;
+	strcpy(output, EMPTY_STRING);
 
 	// Convert text file to html file
 	if (file_strrep(text_file_name, output_file, "\n\n", "</p>\n\n\t\t<p>") != 0) {

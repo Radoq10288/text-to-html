@@ -14,11 +14,12 @@ int file_strrep(const char *input_file_name, FILE *output_file, const char *old_
 		return EXIT_FAILURE;
 	}
 
-	char text_line[2][1000], *output;
+	char text_line[2][1000], output[1000];
 	int str_index = 0, total_str_len = 0;
 
 	strcpy(text_line[0], EMPTY_STRING);
 	strcpy(text_line[1], EMPTY_STRING);
+	strcpy(output, EMPTY_STRING);
 	while (true) {
 		if (feof(input_file)) {break;}
 		fgets(text_line[str_index], 1000, input_file);
@@ -30,9 +31,8 @@ int file_strrep(const char *input_file_name, FILE *output_file, const char *old_
 
 			strcpy(buffer, text_line[0]);
 			strcat(buffer, text_line[1]);
-
-			// Replace old_string with new_string
-			if ((output = strrep(buffer, old_string, new_string))) {
+			strrep(buffer, old_string, new_string, output);
+			if (output != NULL) {
 				strcpy(buffer, output);
 				fputs(buffer, output_file);
 			}
@@ -60,28 +60,22 @@ int file_strrep(const char *input_file_name, FILE *output_file, const char *old_
 }
 
 
-static char *result_string;
-
-static void free_result_string(void) {
-	free(result_string);
-	result_string = NULL;
-}
-
-char* strrep(const char *input_string, const char *old_string, const char *new_string) {
+size_t strrep(const char *input_string, const char *old_string, const char *new_string, char output_string[]) {
 	bool is_old_string_found = false;
 	size_t buffer_size = strlen(old_string),
 		   input_str_size = strlen(input_string),
 		   new_str_size = strlen(new_string),
+		   old_str_size = buffer_size,
 		   result_str_size = input_str_size + 1;
-	char buffer[buffer_size];
+	char buffer[buffer_size], *result_string;
 
 	/* Set the size of result_string based on the length of input_string
 	 * and new_string. If new_string has the same length as old_string, use
 	 * the length of input_string as default size.
 	 */
 
-	if (new_str_size > strlen(old_string) || new_str_size < strlen(old_string)) {
-		result_str_size = (input_str_size - strlen(old_string) + new_str_size + 1);
+	if (new_str_size > old_str_size || new_str_size < old_str_size) {
+		result_str_size = (input_str_size - old_str_size + new_str_size + 1);
 	}
 	result_string = malloc(sizeof(char) * result_str_size);
 
@@ -113,13 +107,16 @@ char* strrep(const char *input_string, const char *old_string, const char *new_s
 		char_index++;
 	}
 
-	atexit(free_result_string);
 	if (is_old_string_found == false) {
-		return NULL;	// old_string is not found, return NULL
+		strcpy(output_string, "\0");	// old_string is not found, return NULL
 	}
 	else {
-		return result_string;
+		strncpy(output_string, result_string, result_str_size);
+		output_string[result_str_size] = '\0';
 	}
+	free(result_string);
+	result_string = NULL;
+	return result_str_size;
 }
 
 
