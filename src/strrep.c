@@ -11,7 +11,7 @@
 int file_strrep(const char *input_file_name, FILE *output_file, const char *old_string, const char *new_string) {
 	FILE *input_file;
 	if (!(input_file = fopen(input_file_name, "r"))) {
-		return EXIT_FAILURE;
+		goto filestrrep_error;
 	}
 
 	char text_line[2][1000], output[1000];
@@ -32,14 +32,14 @@ int file_strrep(const char *input_file_name, FILE *output_file, const char *old_
 			strcpy(buffer, text_line[0]);
 			strcat(buffer, text_line[1]);
 			strrep(buffer, old_string, new_string, output);
-			if (output != NULL) {
-				strcpy(buffer, output);
-				fputs(buffer, output_file);
+			if (strcmp(output, "\0") != 0) {
+				fputs(output, output_file);
 			}
 			else {
-				fputs(text_line[0], output_file);
+				fputs(buffer, output_file);
 			}
 
+			strcpy(output, EMPTY_STRING);
 			strcpy(buffer, EMPTY_STRING);
 			strcpy(text_line[0], EMPTY_STRING);
 			if (strcmp(text_line[1], "\n") != 0) {
@@ -56,7 +56,10 @@ int file_strrep(const char *input_file_name, FILE *output_file, const char *old_
 	}
 
 	fclose(input_file);
-	return EXIT_SUCCESS;
+	return 0;
+
+	filestrrep_error:;
+	return 1;
 }
 
 
