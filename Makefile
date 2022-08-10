@@ -3,7 +3,15 @@ OBJDIR=obj
 SRCDIR=src
 TESTDIR=tests
 
-BIN=$(BINDIR)/make-t2h
+OS=$(shell uname -o)
+ifeq ($(OS), Msys)
+BINFILE=make-t2h.exe
+endif
+ifeq ($(OS), GNU/Linux)
+BINFILE=make-t2h
+endif
+
+BIN=$(BINDIR)/$(BINFILE)
 OBJ=$(OBJDIR)/*.o
 CFILES=$(SRCDIR)/*.c
 
@@ -48,7 +56,7 @@ distclean: clean
 	rm make-t2h-mingw32-debug.tar
 
 clean-test:
-	rm $(TESTDIR)/*.o $(TESTDIR)/bin/*
+	rm $(TESTDIR)/*.o $(TESTDIR)/bin/* new-testfile.txt new-a-testfile.txt
 
 tar-source:
 	tar -cvf make-t2h-mingw32-source.tar include/sput-1.4.0/* src/* tests/* .gitignore COPYING Makefile README.md run-test.sh
@@ -62,12 +70,12 @@ tar-debug:
 install:
 	install -d ~/local/bin
 	install -d ~/local/share/make-t2h
-	install bin/make-t2h ~/local/bin/make-t2h
+	install bin/$(BINFILE) ~/local/bin/$(BINFILE)
 	install COPYING ~/local/share/make-t2h/
 	install README.md ~/local/share/make-t2h/
 
 uninstall:
-	rm -fr ~/local/bin/make-t2h
+	rm ~/local/bin/$(BINFILE)
 	rm ~/local/share/make-t2h/*
 	rmdir ~/local/share/make-t2h
 
