@@ -17,31 +17,31 @@ To build, compile, and install *make-t2h* in debug build, just run the following
 
 ```
 $> make
-
+...
 $> make install
 ```
 <br>
 
-To build, compile, and install in release build, run the following command:<br>
+To build, compile, and install *make-t2h* in release build, run the following command:<br>
 ```
 $> make release
-
+...
 $> make install
 ```
+<br>
 
-Then manually add ```~/local/bin``` to the environment variable *Path*.<br>
-<br>
 __Installation note:__<br>
-In linux, to use the program installed in this directory, add the following to the ```.bashrc```
+In linux, to use the program installed in this directory ```~/local/bin```, add the following to the ```.bashrc```
 file.<br>
-<br>
+
 ```
 export PATH=$PATH:~/local/bin
 ```
 
-
-In windows, to use this program installed in the same directory (expecting that you installed the required MinGW), add the following to the ```Path``` environment variable.<br>
 <br>
+
+In windows, to use this program installed in similar directory (expecting that you installed the required MinGW), add the following to the ```Path``` environment variable.<br>
+
 ```
 C:\MinGW\msys\1.0\home\<your-user-name>\local\bin
 ```
@@ -63,7 +63,7 @@ __Options:__<br>
 <br>
 
 __Note:__<br>
-If '-t\--title' option is omitted, it will take a default title of 'My Webpage'.
+If '-t\\--title' option is omitted, it will take a default title of 'My Webpage'.
 <br><br>
 
 ## Simple pattern to follow
