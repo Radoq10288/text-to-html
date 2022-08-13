@@ -45,9 +45,10 @@ static void help(void) {
 			"    make-t2h [Option]                         For other options to show help, version, etc.\n"
 			"\n"
 			"Options:\n"
-			"    -h, --help         Show this help.\n"
-			"    -t, --title        Set the title of the html file.\n"
-			"    -v, --version      Show current version of this software.\n");
+			"    -h, --help         		Show this help.\n"
+			"    -t, --title        		Set the title of the html file.\n"
+			"        --calibre-epub-xhtml	Creates an xhtml file used in creating epub in calibre.\n"
+			"    -v, --version      		Show current version of this software.\n");
 }
 
 
@@ -74,10 +75,10 @@ int main(int argc, char *argv[]) {
 
 	while(true) {
         static struct option long_options[] = {
-            {"help",		no_argument,		0,  	'h'},
-            {"title",		required_argument,	0,  	1},
-            {"version",		no_argument,		0,		'v'},
-            {"xhtml",		no_argument,		0,		2},
+        	{"calibre-epub-xhtml",		no_argument,		0,		2},
+            {"help",					no_argument,		0,  	'h'},
+            {"title",					required_argument,	0,  	1},
+            {"version",					no_argument,		0,		'v'},
             {0,				0,					0,		0}
         };
 
