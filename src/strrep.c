@@ -30,13 +30,13 @@ int file_strrep(const char *input_file_name, FILE *output_file, const char *old_
 			char buffer[total_str_len];
 
 			strcpy(buffer, text_line[0]);
-			strcat(buffer, text_line[1]);
+			if (strcmp(text_line[1], "\n") == 0) { strcat(buffer, text_line[1]); }
 			strrep(buffer, old_string, new_string, output);
 			if (strcmp(output, "\0") != 0) {
 				fputs(output, output_file);
 			}
 			else {
-				fputs(buffer, output_file);
+				goto filestrrep_error;	// old_string is not found
 			}
 
 			strcpy(output, EMPTY_STRING);
