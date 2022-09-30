@@ -1,7 +1,6 @@
 BINDIR=bin
 OBJDIR=obj
 SRCDIR=src
-TESTDIR=tests
 
 OS=$(shell uname -o)
 ifeq ($(OS), Msys)
@@ -36,16 +35,6 @@ $(OBJ) : $(CFILES)
 	@mv *.o $(OBJDIR)/
 
 
-test: $(TESTDIR)/bin/test
-$(TESTDIR)/bin/test: $(TESTDIR)/*.o
-	$(CC) -o $(TESTDIR)/bin/test $(TESTDIR)/*.o
-
-$(TESTDIR)/*.o: $(TESTDIR)/src/*.c $(SRCDIR)/strrep.c $(SRCDIR)/strrep.h
-	$(CC) -c $(TESTDIR)/src/*.c $(SRCDIR)/strrep.c -g -pedantic -Wall
-
-	@mv *.o $(TESTDIR)/
-	
-
 clean:
 	rm $(OBJ) $(BINDIR)/*
 
@@ -55,8 +44,19 @@ distclean: clean
 	rm make-t2h-mingw32-release.tar
 	rm make-t2h-mingw32-debug.tar
 
+
+build-test:
+	cd tests && $(MAKE)
+
+run-test:
+	cd tests/bin && ./test
+
 clean-test:
-	rm $(TESTDIR)/*.o $(TESTDIR)/bin/* new-testfile.txt new-a-testfile.txt
+	cd tests && $(MAKE) clean
+
+distclean-test:
+	cd tests && $(MAKE) distclean
+
 
 tar-source:
 	tar -cvf make-t2h-mingw32-source.tar include/sput-1.4.0/* src/* tests/* .gitignore COPYING Makefile README.md run-test.sh
@@ -66,6 +66,7 @@ tar-release:
 
 tar-debug:
 	tar -cvf make-t2h-mingw32-debug.tar bin/* COPYING README.md
+
 
 install:
 	install -d ~/local/bin
