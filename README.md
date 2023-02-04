@@ -1,4 +1,4 @@
-# Make txt to html
+# txt2html (text to html)
 
 ## About
 A program that accept a text (\*.txt) file and convert it to html (\*.html) file.
@@ -13,7 +13,7 @@ read <a target="_blank" href="https://opensource.com/article/20/8/gnu-windows-mi
 <br><br>
 
 ## How to build, compile, and install
-To build, compile, and install *make-t2h* in debug build, just run the following command:<br>
+To build, compile, and install *txt2html* in debug build, just run the following command:<br>
 
 ```
 $> make
@@ -22,7 +22,7 @@ $> make install
 ```
 <br>
 
-To build, compile, and install *make-t2h* in release build, run the following command:<br>
+To build, compile, and install *txt2html* in release build, run the following command:<br>
 ```
 $> make release
 ...
@@ -52,12 +52,12 @@ C:\MinGW\msys\1.0\home\<your-user-name>\local\bin
 To convert a text file to html file:
 
 ```
-$> make-t2h <filename of text file> --title "My Webpage"
+$> txt2html <filename of text file> --title "My Webpage"
 ```
 
 
 __Options:__<br>
-* --calibre-epub-xhtml = set *make-t2h* to convert text files to xhtml format that can be use to create epub file using the calibre e-book management.
+* --calibre-epub-xhtml = set *txt2html* to convert text files to xhtml format that can be use to create epub file using the calibre e-book management.
 * -t, \--title <title\> = set the title tag of the html file.<br>
 * -h, \--help = show some text that tells how to use the program.<br>
 * -v, \--version = show the current version of the program.<br>

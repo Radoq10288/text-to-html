@@ -4,10 +4,10 @@ SRCDIR=src
 
 OS=$(shell uname -o)
 ifeq ($(OS), Msys)
-BINFILE=make-t2h.exe
+BINFILE=txt2html.exe
 endif
 ifeq ($(OS), GNU/Linux)
-BINFILE=make-t2h
+BINFILE=txt2html
 endif
 
 BIN=$(BINDIR)/$(BINFILE)
@@ -40,9 +40,9 @@ clean:
 
 distclean: clean
 	rmdir $(OBJDIR) $(BINDIR)
-	rm make-t2h-mingw32-source.tar
-	rm make-t2h-mingw32-release.tar
-	rm make-t2h-mingw32-debug.tar
+	rm txt2html-mingw32-source.tar
+	rm txt2html-mingw32-release.tar
+	rm txt2html-mingw32-debug.tar
 
 
 build-test:
@@ -59,25 +59,25 @@ distclean-test:
 
 
 tar-source:
-	tar -cvf make-t2h-mingw32-source.tar include/sput-1.4.0/* src/* tests/* .gitignore COPYING Makefile README.md run-test.sh
+	tar -cvf txt2html-mingw32-source.tar include/sput-1.4.0/* src/* tests/* .gitignore COPYING Makefile README.md run-test.sh
 
 tar-release:
-	tar -cvf make-t2h-mingw32-release.tar bin/* COPYING README.md
+	tar -cvf txt2html-mingw32-release.tar bin/* COPYING README.md
 
 tar-debug:
-	tar -cvf make-t2h-mingw32-debug.tar bin/* COPYING README.md
+	tar -cvf txt2html-mingw32-debug.tar bin/* COPYING README.md
 
 
 install:
 	install -d ~/local/bin
-	install -d ~/local/share/make-t2h
+	install -d ~/local/share/txt2html
 	install bin/$(BINFILE) ~/local/bin/$(BINFILE)
-	install COPYING ~/local/share/make-t2h/
-	install README.md ~/local/share/make-t2h/
+	install COPYING ~/local/share/txt2html/
+	install README.md ~/local/share/txt2html/
 
 uninstall:
 	rm ~/local/bin/$(BINFILE)
-	rm ~/local/share/make-t2h/*
-	rmdir ~/local/share/make-t2h
+	rm ~/local/share/txt2html/*
+	rmdir ~/local/share/txt2html
 
 

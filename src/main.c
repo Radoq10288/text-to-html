@@ -1,4 +1,4 @@
-/* File:         make-txt-to-html\src\main.c
+/* File:         txt2html\src\main.c
  *
  * Author:       Radoq10288
  *
@@ -41,8 +41,8 @@ char html_content[][150] = {
 
 static void help(void) {
 	printf("\nUsage:\n"
-			"    make-t2h [Text file filename] [Option]    For converting text file to html.\n"
-			"    make-t2h [Option]                         For other options to show help, version, etc.\n"
+			"    txt2html [Text file filename] [Option]    For converting text file to html.\n"
+			"    txt2html [Option]                         For other options to show help, version, etc.\n"
 			"\n"
 			"Options:\n"
 			"    -h, --help         		Show this help.\n"
@@ -53,8 +53,8 @@ static void help(void) {
 
 
 static void version(void) {
-	printf("\nmake-t2h version 0.1.3-alpha.2, Copyright (C) 2022 Radoq10288\n"
-			"make-t2h comes with ABSOLUTELY NO WARRANTY; for details type `show w'.\n"
+	printf("\ntxt2html version 0.1.3-alpha.2, Copyright (C) 2022 Radoq10288\n"
+			"txt2html comes with ABSOLUTELY NO WARRANTY; for details type `show w'.\n"
 			"This is free software, and you are welcome to redistribute it\n"
 			"under certain conditions; type `show c' for details.\n");
 }
@@ -68,8 +68,8 @@ int main(int argc, char *argv[]) {
 	int getopt_status, html_content_index = 0, option_index = 0;
 
 	if (argc == 1) {
-		fprintf(stderr, "make-t2h\nError: No argument or option specified.\nInfo: Type 'make-t2h -h/--help' to see usage and available options.\n");
-		goto maket2h_error;
+		fprintf(stderr, "txt2html\nError: No argument or option specified.\nInfo: Type 'txt2html -h/--help' to see usage and available options.\n");
+		goto txt2html_error;
 	}
 	strcpy(text_file_name, argv[1]);
 
@@ -95,8 +95,8 @@ int main(int argc, char *argv[]) {
 			case 1:
 			case 't':
 				if (argc == 3) {
-					fprintf(stderr, "make-t2h\nError: No text file is specified for convertion.\n");
-					goto maket2h_error;
+					fprintf(stderr, "txt2html\nError: No text file is specified for convertion.\n");
+					goto txt2html_error;
 				}
 				strcpy(page_title, optarg);
 				break;
@@ -109,22 +109,22 @@ int main(int argc, char *argv[]) {
 				goto skipotherprocess;
 			case ':':
 				if (optopt == 0) {
-					fprintf(stderr, "make-t2h\nError: The long option --%s requires an argument.\n", long_options[option_index].name);
+					fprintf(stderr, "txt2html\nError: The long option --%s requires an argument.\n", long_options[option_index].name);
 				}
 				else {
-					fprintf(stderr, "make-t2h\nError: The short option -%c requires an argument.\n", optopt);
+					fprintf(stderr, "txt2html\nError: The short option -%c requires an argument.\n", optopt);
 				}
-				goto maket2h_error;
+				goto txt2html_error;
 			case 0:
 			case '?':
 				if (optopt != 0) {
-					fprintf(stderr, "make-t2h\nError: Unknown short option '-%c'.\n", optopt);
+					fprintf(stderr, "txt2html\nError: Unknown short option '-%c'.\n", optopt);
 				}
 				else {
-					fprintf(stderr, "make-t2h\nError: Unknown long option '%s'.\n", argv[(optind - 1)]);
+					fprintf(stderr, "txt2html\nError: Unknown long option '%s'.\n", argv[(optind - 1)]);
 				}
-				fprintf(stderr, "Info: Type 'make-t2h -h/--help' to see available options.\n");
-				goto maket2h_error;
+				fprintf(stderr, "Info: Type 'txt2html -h/--help' to see available options.\n");
+				goto txt2html_error;
         }
     }
 
@@ -134,21 +134,21 @@ int main(int argc, char *argv[]) {
 	strcpy(result, EMPTY_STRING);
 	strrep(text_file_name, "txt", file_extension, result);
 	if (result == NULL) {
-		fprintf(stderr, "make-t2h\nError: Can not convert the file '%s'!\n"
+		fprintf(stderr, "txt2html\nError: Can not convert the file '%s'!\n"
 						"info: Only files with '.txt' extension is accepted.\n", text_file_name);
-		goto maket2h_error;
+		goto txt2html_error;
 	}
 	strcpy(html_file_name, result);
 
 	if (!fopen(html_file_name, "r")) {
 		if (!(output_file = fopen(html_file_name, "a"))) {
-			fprintf(stderr, "make-t2h\nError: Failed to create file '%s'.\n", html_file_name);
-			goto maket2h_error;
+			fprintf(stderr, "txt2html\nError: Failed to create file '%s'.\n", html_file_name);
+			goto txt2html_error;
 		}
 	}
 	else {
-		fprintf(stderr, "make-t2h\nError: File '%s' already exist!\n", html_file_name);
-		goto maket2h_error;
+		fprintf(stderr, "txt2html\nError: File '%s' already exist!\n", html_file_name);
+		goto txt2html_error;
 	}	
 
 	// Write to stream the initial part of the html file.
@@ -159,8 +159,8 @@ int main(int argc, char *argv[]) {
 
 	// Convert text file to html file
 	if (file_strrep(text_file_name, output_file, "\n\n", "</p>\n\n\t\t<p>") != 0) {
-		fprintf(stderr, "make-t2h\nError: Failed to open file '%s' for reading.\n", text_file_name);
-		goto maket2h_error;
+		fprintf(stderr, "txt2html\nError: Failed to open file '%s' for reading.\n", text_file_name);
+		goto txt2html_error;
 	}
 
 	// Write to stream the last part of the html file.
@@ -171,7 +171,7 @@ int main(int argc, char *argv[]) {
 
     return 0;
 
-	maket2h_error:;
+	txt2html_error:;
 	return 1;
 }
 
