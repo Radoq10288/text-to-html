@@ -69,7 +69,7 @@ size_t strrep(const char *input_string, const char *old_string, const char *new_
 		   input_str_size = strlen(input_string),
 		   new_str_size = strlen(new_string),
 		   old_str_size = buffer_size,
-		   result_str_size = input_str_size + 1;
+		   result_str_size = input_str_size;
 	char buffer[buffer_size], *result_string;
 
 	/* Set the size of result_string based on the length of input_string
@@ -78,10 +78,9 @@ size_t strrep(const char *input_string, const char *old_string, const char *new_
 	 */
 
 	if (new_str_size > old_str_size || new_str_size < old_str_size) {
-		result_str_size = (input_str_size - old_str_size + new_str_size + 1);
+		result_str_size = (input_str_size - old_str_size + new_str_size);
 	}
-	result_string = malloc(sizeof(char) * result_str_size);
-
+	result_string = malloc(sizeof(char) * result_str_size + 1);
 	strcpy(buffer, EMPTY_STRING);
 	strcpy(result_string, EMPTY_STRING);
 	int buffer_count = 1, char_index = 0;
@@ -90,28 +89,28 @@ size_t strrep(const char *input_string, const char *old_string, const char *new_
 		strncat(buffer, &input_string[char_index], 1);
 
 		if (strcmp(old_string, buffer) == 0) {
-			strcat(result_string, new_string);
+			strncat(result_string, new_string, new_str_size);
 			strcpy(buffer, EMPTY_STRING);
 			is_old_string_found = true;
 			buffer_count -= 1;
+			goto skipifblockahead;
 		}
-		else if (buffer_count == buffer_size) {
+
+		if (buffer_count == buffer_size) {
 			strncat(result_string, &buffer[0], 1);
-			if (buffer_count > 1) {
-				memmove(buffer, buffer+1, (buffer_size - 1));
-			}
+			memmove(buffer, buffer+1, (buffer_size - 1));
 			buffer[(buffer_size - 1)] = '\0';
 			buffer_count -= 1;
 		}
-		else {
-			// Do nothing here...
-		}
+
+		skipifblockahead:;
 		buffer_count++;
 		char_index++;
 	}
 
 	if (is_old_string_found == false) {
 		strcpy(output_string, "\0");	// old_string is not found, return NULL
+		result_str_size = 0;
 	}
 	else {
 		strncpy(output_string, result_string, result_str_size);
