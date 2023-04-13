@@ -10,56 +10,40 @@
 
 int file_strrep(const char *input_file_name, FILE *output_file, const char *old_string, const char *new_string) {
 	FILE *input_file;
-	if (!(input_file = fopen(input_file_name, "r"))) {
-		goto filestrrep_error;
+	if ((input_file = fopen(input_file_name, "r")) == NULL) {
+		return 1;
 	}
 
-	char text_line[2][1000], output[1000];
+	char text_line[2][1000];
 	int str_index = 0, total_str_len = 0;
-
 	strcpy(text_line[0], EMPTY_STRING);
 	strcpy(text_line[1], EMPTY_STRING);
-	strcpy(output, EMPTY_STRING);
-	while (true) {
-		if (feof(input_file)) {break;}
+
+	while (!feof(input_file)) {
 		fgets(text_line[str_index], 1000, input_file);
 		total_str_len += strlen(text_line[str_index]);
 		str_index++;
 
 		if (str_index == 2) {
-			char buffer[total_str_len];
+			char buffer[total_str_len], output[total_str_len + 1000];
 
 			strcpy(buffer, text_line[0]);
 			if (strcmp(text_line[1], "\n") == 0) { strcat(buffer, text_line[1]); }
-			strrep(buffer, old_string, new_string, output);
-			if (strcmp(output, "\0") != 0) {
-				fputs(output, output_file);
-			}
-			else {
-				goto filestrrep_error;	// old_string is not found
-			}
+			if (strrep(buffer, old_string, new_string, output) == 0) { return 2; }
 
-			strcpy(output, EMPTY_STRING);
+			fputs(output, output_file);
 			strcpy(buffer, EMPTY_STRING);
 			strcpy(text_line[0], EMPTY_STRING);
-			if (strcmp(text_line[1], "\n") != 0) {
-				strcpy(text_line[0], text_line[1]);
-				str_index = 1;
-				total_str_len = strlen(text_line[0]);
-			}
-			else {
-				str_index = 0;
-				total_str_len = 0;
-			}
+			strcpy(text_line[0], text_line[1]);
 			strcpy(text_line[1], EMPTY_STRING);
+			str_index = 0;
+			total_str_len = strlen(text_line[0]);
+			
 		}
 	}
 
 	fclose(input_file);
 	return 0;
-
-	filestrrep_error:;
-	return 1;
 }
 
 
