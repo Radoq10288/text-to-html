@@ -87,8 +87,17 @@ Urna nunc id cursus metus. Id leo in vitae turpis massa. Blandit turpis cursus i
 
 ```
 
-Observe properly the empty lines between paragraphs. This will be used by the program to identify where the opening \<p\> tag and closing \</p\> tag will be placed.<br>
+Observe the empty lines between the paragraphs. It will be used by the program to identify where the opening \<p\> tag and closing \</p\> tag will be placed.<br>
 <br><br>
+
+## Issue
+
+Based on the test run using the provided sample text file, a minimal issue on the resulting html file still exist.<br/>
+<br/>
+The issue is, two blocks of a paragraph are put together in a single opening and closing paragraph tag that should be two separate paragraphs.<br/>
+<br/>
+But overall, the result has achieved the goal of producing a basic html file.<br/>
+<br/><br/>
 
 ## About
 This program is free and open-source with the license of GNU General Public
