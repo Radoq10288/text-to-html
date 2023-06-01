@@ -16,7 +16,15 @@
 #define EMPTY_STRING	"\0"
 
 
-char html_content[][150] = {
+typedef struct {
+	char name[255];
+	char extension[6];
+	char page_title[255];
+	int content_index;
+} File;
+
+
+static char html_content[][150] = {
 	"<!DOCTYPE html>\n"
 	"<html>\n"
 	"\t<head>\n"
@@ -61,17 +69,17 @@ static void version(void) {
 
 
 int main(int argc, char *argv[]) {
-	char file_extension[6] = "html",
-		 html_file_name[256] = EMPTY_STRING,
-		 page_title[256] = EMPTY_STRING,
-		 text_file_name[256] = EMPTY_STRING;
-	int getopt_status, html_content_index = 0, option_index = 0;
+	File text, html;
+	html.content_index = 0;
+	
+	int getopt_status, option_index = 0;
 
 	if (argc == 1) {
 		fprintf(stderr, "txt2html\nError: No argument or option specified.\nInfo: Type 'txt2html -h/--help' to see usage and available options.\n");
 		goto txt2html_error;
 	}
-	strcpy(text_file_name, argv[1]);
+	strcpy(text.name, argv[1]);
+	strcpy(html.extension, "html");
 
 	while(true) {
         static struct option long_options[] = {
@@ -98,11 +106,11 @@ int main(int argc, char *argv[]) {
 					fprintf(stderr, "txt2html\nError: No text file is specified for convertion.\n");
 					goto txt2html_error;
 				}
-				strcpy(page_title, optarg);
+				strcpy(html.page_title, optarg);
 				break;
 			case 2:
-				strcpy(file_extension, "xhtml");
-				html_content_index++;
+				strcpy(html.extension, "xhtml");
+				html.content_index++;
 				break;
 			case 'v':
 				version();
@@ -132,34 +140,34 @@ int main(int argc, char *argv[]) {
 	FILE *output_file;
 
 	strcpy(result, EMPTY_STRING);
-	strrep(text_file_name, "txt", file_extension, result);
+	strrep(text.name, "txt", html.extension, result);
 	if (result == NULL) {
 		fprintf(stderr, "txt2html\nError: Can not convert the file '%s'!\n"
-						"info: Only files with '.txt' extension is accepted.\n", text_file_name);
+						"info: Only files with '.txt' extension is accepted.\n", text.name);
 		goto txt2html_error;
 	}
-	strcpy(html_file_name, result);
+	strcpy(html.name, result);
 
-	if (!fopen(html_file_name, "r")) {
-		if (!(output_file = fopen(html_file_name, "a"))) {
-			fprintf(stderr, "txt2html\nError: Failed to create file '%s'.\n", html_file_name);
+	if (!fopen(html.name, "r")) {
+		if (!(output_file = fopen(html.name, "a"))) {
+			fprintf(stderr, "txt2html\nError: Failed to create file '%s'.\n", html.name);
 			goto txt2html_error;
 		}
 	}
 	else {
-		fprintf(stderr, "txt2html\nError: File '%s' already exist!\n", html_file_name);
+		fprintf(stderr, "txt2html\nError: File '%s' already exist!\n", html.name);
 		goto txt2html_error;
 	}	
 
 	// Write to stream the initial part of the html file.
 	char output[150];
-	strrep(html_content[html_content_index], "My Webpage", page_title, output);
+	strrep(html_content[html.content_index], "My Webpage", html.page_title, output);
 	fputs(output, output_file);
 	strcpy(output, EMPTY_STRING);
 
 	// Convert text file to html file
-	if (file_strrep(text_file_name, output_file, "\n\n", "</p>\n\n\t\t<p>") != 0) {
-		fprintf(stderr, "txt2html\nError: Failed to open file '%s' for reading.\n", text_file_name);
+	if (file_strrep(text.name, output_file, "\n\n", "</p>\n\n\t\t<p>") != 0) {
+		fprintf(stderr, "txt2html\nError: Failed to open file '%s' for reading.\n", text.name);
 		goto txt2html_error;
 	}
 
