@@ -15,6 +15,23 @@
 
 #define EMPTY_STRING	"\0"
 
+/* Error messages
+ */
+#define NO_ARG_ERROR	"No argument or option is specified"
+#define NO_INPUT_FILE_ERROR	"No text file is specified for convertion"
+#define UNKNOWN_OPTION_ERROR	"The option specified is unknown"
+#define INVALID_INPUT_FILE_ERROR	"Can not convert the file"
+#define FILE_CREATE_ERROR	"Failed to create the file"
+#define FILE_OPEN_ERROR	"Failed to open the file for reading"
+#define FILE_EXIST_ERROR	"The file already exist"
+
+/* Information messages
+ */
+#define GIVE_HELP_INFO	"Please use help option to get more info on using txt2html"
+#define GIVE_INPUT_FILE_INFO	"Only files with '.txt' extension is accepted"
+#define GIVE_OPTION_INFO	"This option requires an argument"
+#define GIVE_VERSION_INFO	"0.1.3-alpha.2"
+
 
 typedef struct {
 	char name[255];
@@ -22,6 +39,27 @@ typedef struct {
 	char page_title[255];
 	int content_index;
 } File;
+
+
+static void help(void) {
+	printf("\nUsage:\n"
+			"    txt2html [Text file filename] [Option]    For converting text file to html.\n"
+			"    txt2html [Option]                         For other options to show this help and version.\n"
+			"\n"
+			"Options:\n"
+			"    calibre-epub-xhtml	Creates an xhtml file used in creating epub in calibre.\n"
+			"    help         		Show this help.\n"
+			"    title        		Set the title of the html file.\n"
+			"    version      		Show current version of this software.\n");
+}
+
+
+static void version(void) {
+	printf("\ntxt2html version %s, Copyright (C) 2022 Radoq10288\n"
+			"txt2html comes with ABSOLUTELY NO WARRANTY; for details type `show w'.\n"
+			"This is free software, and you are welcome to redistribute it\n"
+			"under certain conditions; type `show c' for details.\n", GIVE_VERSION_INFO);
+}
 
 
 static char html_content[][150] = {
@@ -47,27 +85,6 @@ static char html_content[][150] = {
 };
 
 
-static void help(void) {
-	printf("\nUsage:\n"
-			"    txt2html [Text file filename] [Option]    For converting text file to html.\n"
-			"    txt2html [Option]                         For other options to show help, version, etc.\n"
-			"\n"
-			"Options:\n"
-			"    -h, --help         		Show this help.\n"
-			"    -t, --title        		Set the title of the html file.\n"
-			"        --calibre-epub-xhtml	Creates an xhtml file used in creating epub in calibre.\n"
-			"    -v, --version      		Show current version of this software.\n");
-}
-
-
-static void version(void) {
-	printf("\ntxt2html version 0.1.3-alpha.2, Copyright (C) 2022 Radoq10288\n"
-			"txt2html comes with ABSOLUTELY NO WARRANTY; for details type `show w'.\n"
-			"This is free software, and you are welcome to redistribute it\n"
-			"under certain conditions; type `show c' for details.\n");
-}
-
-
 int main(int argc, char *argv[]) {
 	File text, html;
 	html.content_index = 0;
@@ -75,63 +92,56 @@ int main(int argc, char *argv[]) {
 	int getopt_status, option_index = 0;
 
 	if (argc == 1) {
-		fprintf(stderr, "txt2html\nError: No argument or option specified.\nInfo: Type 'txt2html -h/--help' to see usage and available options.\n");
+		fprintf(stderr, "txt2html\nError: %s.\nInfo: %s.\n", NO_ARG_ERROR, GIVE_HELP_INFO);
 		goto txt2html_error;
 	}
-	strcpy(text.name, argv[1]);
-	strcpy(html.extension, "html");
 
+	/* Initial values for the text and html data structure.
+	 */
+	strcpy(text.name, argv[1]);
+	strcpy(html.page_title, text.name);
+	strcpy(html.extension, "html");
+	
 	while(true) {
         static struct option long_options[] = {
-        	{"calibre-epub-xhtml",		no_argument,		0,		2},
-            {"help",					no_argument,		0,  	'h'},
-            {"title",					required_argument,	0,  	1},
-            {"version",					no_argument,		0,		'v'},
+        	{"calibre-epub-xhtml",		no_argument,		0,		0},
+            {"help",					no_argument,		0,  	1},
+            {"title",					required_argument,	0,  	2},
+            {"version",					no_argument,		0,		3},
             {0,				0,					0,		0}
         };
 
 		opterr = 0;
-		getopt_status = getopt_long(argc, argv, ":ht:v", long_options, &option_index);
+		getopt_status = getopt_long(argc, argv, ":", long_options, &option_index);
         if (getopt_status == -1) {
 			break;
 		}
 
 		switch(getopt_status) {
-			case 'h':
+			case 0:
+				strcpy(html.extension, "xhtml");
+				html.content_index++;
+				break;
+			case 1:
 				help();
 				goto skipotherprocess;
-			case 1:
-			case 't':
+			case 2:
 				if (argc == 3) {
-					fprintf(stderr, "txt2html\nError: No text file is specified for convertion.\n");
+					fprintf(stderr, "txt2html\nError: %s.\n", NO_INPUT_FILE_ERROR);
 					goto txt2html_error;
 				}
 				strcpy(html.page_title, optarg);
 				break;
-			case 2:
-				strcpy(html.extension, "xhtml");
-				html.content_index++;
-				break;
-			case 'v':
+			case 3:
 				version();
 				goto skipotherprocess;
 			case ':':
-				if (optopt == 0) {
-					fprintf(stderr, "txt2html\nError: The long option --%s requires an argument.\n", long_options[option_index].name);
-				}
-				else {
-					fprintf(stderr, "txt2html\nError: The short option -%c requires an argument.\n", optopt);
-				}
+				fprintf(stderr, "txt2html\nOption: %s\nError: %s.\n", argv[optind - 1], NO_ARG_ERROR);
+				fprintf(stderr, "Info: %s.\n", GIVE_OPTION_INFO);
 				goto txt2html_error;
-			case 0:
 			case '?':
-				if (optopt != 0) {
-					fprintf(stderr, "txt2html\nError: Unknown short option '-%c'.\n", optopt);
-				}
-				else {
-					fprintf(stderr, "txt2html\nError: Unknown long option '%s'.\n", argv[(optind - 1)]);
-				}
-				fprintf(stderr, "Info: Type 'txt2html -h/--help' to see available options.\n");
+				fprintf(stderr, "txt2html\nOption: %s\nError: %s.\n", argv[optind - 1], UNKNOWN_OPTION_ERROR);
+				fprintf(stderr, "Info: %s.\n", GIVE_HELP_INFO);
 				goto txt2html_error;
         }
     }
@@ -141,21 +151,21 @@ int main(int argc, char *argv[]) {
 
 	strcpy(result, EMPTY_STRING);
 	strrep(text.name, "txt", html.extension, result);
-	if (result == NULL) {
-		fprintf(stderr, "txt2html\nError: Can not convert the file '%s'!\n"
-						"info: Only files with '.txt' extension is accepted.\n", text.name);
+	if (strcmp(result, "\0") == 0) {
+		fprintf(stderr, "txt2html\nError: %s '%s'!\n",INVALID_INPUT_FILE_ERROR ,text.name);
+		fprintf(stderr, "Info: %s.\n", GIVE_INPUT_FILE_INFO);
 		goto txt2html_error;
 	}
 	strcpy(html.name, result);
 
 	if (!fopen(html.name, "r")) {
 		if (!(output_file = fopen(html.name, "a"))) {
-			fprintf(stderr, "txt2html\nError: Failed to create file '%s'.\n", html.name);
+			fprintf(stderr, "txt2html\nError: %s '%s'.\n", FILE_CREATE_ERROR, html.name);
 			goto txt2html_error;
 		}
 	}
 	else {
-		fprintf(stderr, "txt2html\nError: File '%s' already exist!\n", html.name);
+		fprintf(stderr, "txt2html\nFile: %s\nError: %s!\n", html.name, FILE_EXIST_ERROR);
 		goto txt2html_error;
 	}	
 
@@ -167,7 +177,7 @@ int main(int argc, char *argv[]) {
 
 	// Convert text file to html file
 	if (file_strrep(text.name, output_file, "\n\n", "</p>\n\n\t\t<p>") != 0) {
-		fprintf(stderr, "txt2html\nError: Failed to open file '%s' for reading.\n", text.name);
+		fprintf(stderr, "txt2html\nFile: %s\nError: %s.\n", text.name, FILE_OPEN_ERROR);
 		goto txt2html_error;
 	}
 
