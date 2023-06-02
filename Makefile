@@ -39,7 +39,7 @@ clean:
 	rm $(OBJ) $(BINDIR)/*
 
 distclean: clean
-	rmdir $(OBJDIR) $(BINDIR)
+	rmdir $(OBJDIR)
 	rm txt2html-mingw32-source.tar
 	rm txt2html-mingw32-release.tar
 	rm txt2html-mingw32-debug.tar
