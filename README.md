@@ -58,13 +58,13 @@ $> txt2html <filename of text file> --title "My Webpage"
 
 __Options:__<br>
 * --calibre-epub-xhtml = set *txt2html* to convert text files to xhtml format that can be use to create epub file using the calibre e-book management.
-* -t, \--title <title\> = set the title tag of the html file.<br>
-* -h, \--help = show some text that tells how to use the program.<br>
-* -v, \--version = show the current version of the program.<br>
+* \--title <title\> = set the title tag of the html file.<br>
+* \--help = show some text that tells how to use the program.<br>
+* \--version = show the current version of the program.<br>
 <br>
 
 __Note:__<br>
-If '-t\\--title' option is omitted, it will take a default title of 'My Webpage'.
+If '--title' option is omitted, it will take a default title of 'My Webpage'.
 <br><br>
 
 ## Simple pattern to follow
