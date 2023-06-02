@@ -40,9 +40,9 @@ clean:
 
 distclean: clean
 	rmdir $(OBJDIR)
-	rm txt2html-mingw32-source.tar
-	rm txt2html-mingw32-release.tar
-	rm txt2html-mingw32-debug.tar
+	rm txt2html-source.tar
+	rm txt2html-release.tar
+	rm txt2html-debug.tar
 
 
 build-test:
