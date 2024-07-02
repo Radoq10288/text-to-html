@@ -35,8 +35,8 @@ $(OBJ) : $(CFILES)
 	@mv *.o $(OBJDIR)/
 
 
-clean:
-	rm $(OBJ) $(BINDIR)/*
+clean: build-lib-clean
+	rm $(OBJ) $(BINDIR)/* ./lib/*.a
 
 distclean: clean
 	rmdir $(OBJDIR)
@@ -45,19 +45,40 @@ distclean: clean
 	rm txt2html-debug.tar
 
 
-build-test:
+# To unit test
+build-test: build-lib
 	cd tests && $(MAKE)
 
 run-test:
 	cd tests/bin && ./test
 
-clean-test:
+clean-test: build-lib-clean
 	cd tests && $(MAKE) clean
 
 distclean-test:
 	cd tests && $(MAKE) distclean
 
 
+# Building the static library and putting the '*.a' file in the 'lib' folder.
+build-lib:
+	cd src/find-string && $(MAKE)
+	cd src/copy-sub-string && $(MAKE)
+	cd src/string-replace && $(MAKE)
+	cd src/file-string-replace && $(MAKE)
+	
+	cp src/find-string/libfind_string.a ./lib
+	cp src/copy-sub-string/libcopy_sub_string.a ./lib
+	cp src/string-replace/libstring_replace.a ./lib
+	cp src/file-string-replace/libfstring_replace.a ./lib
+
+build-lib-clean:
+	rm src/find-string/libfind_string.a src/find-string/find_string.o
+	rm src/copy-sub-string/libcopy_sub_string.a src/copy-sub-string/copy_sub_string.o
+	rm src/string-replace/libstring_replace.a src/string-replace/string_replace.o
+	rm src/file-string-replace/libfstring_replace.a src/file-string-replace/file_string_replace.o
+
+
+# Archive all the files
 tar-source:
 	tar -cvf txt2html-mingw32-source.tar include/sput-1.4.0/* src/* tests/* .gitignore COPYING Makefile README.md run-test.sh
 
@@ -68,6 +89,7 @@ tar-debug:
 	tar -cvf txt2html-mingw32-debug.tar bin/* COPYING README.md
 
 
+# Install the program
 install:
 	install -d ~/local/bin
 	install -d ~/local/share/txt2html
