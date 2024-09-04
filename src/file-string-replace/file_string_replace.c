@@ -25,7 +25,7 @@ int fstring_replace(const char *input_file_name, const char *output_file_name, c
 	
 	FILE *output_file;
 	if ((output_file = fopen(output_file_name, "a")) == NULL) {
-		return -2;	// Failed to create output file
+		return -2;	// Failed to create output file or file already exist
 	}
 
 	bool is_old_string_found = false;
