@@ -10,7 +10,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "strrep.h"
+
+#include "file_string_replace.h"
+#include "string_replace.h"
 
 
 #define EMPTY_STRING	"\0"
@@ -150,7 +152,7 @@ int main(int argc, char *argv[]) {
 	FILE *output_file;
 
 	strcpy(result, EMPTY_STRING);
-	strrep(text.name, "txt", html.extension, result);
+	string_replace(text.name, "txt", html.extension, result);
 	if (strcmp(result, "\0") == 0) {
 		fprintf(stderr, "txt2html\nError: %s '%s'!\n",INVALID_INPUT_FILE_ERROR ,text.name);
 		fprintf(stderr, "Info: %s.\n", GIVE_INPUT_FILE_INFO);
@@ -167,24 +169,35 @@ int main(int argc, char *argv[]) {
 	else {
 		fprintf(stderr, "txt2html\nFile: %s\nError: %s!\n", html.name, FILE_EXIST_ERROR);
 		goto txt2html_error;
-	}	
+	}
 
 	// Write to stream the initial part of the html file.
 	char output[150];
-	strrep(html_content[html.content_index], "My Webpage", html.page_title, output);
+	string_replace(html_content[html.content_index], "My Webpage", html.page_title, output);
 	fputs(output, output_file);
 	strcpy(output, EMPTY_STRING);
+	fclose(output_file);
 
 	// Convert text file to html file
-	if (file_strrep(text.name, output_file, "\n\n", "</p>\n\n\t\t<p>") != 0) {
-		fprintf(stderr, "txt2html\nFile: %s\nError: %s.\n", text.name, FILE_OPEN_ERROR);
-		goto txt2html_error;
+	int status = 0;
+	status = fstring_replace(text.name, html.name, "\n\n", "</p>\n\n\t\t<p>");
+	switch (status) {
+		case -2:
+			fprintf(stderr, "txt2html\nFile: %s\nError: %s\n", html.name, FILE_CREATE_ERROR);
+			goto txt2html_error;
+		case -1:
+			fprintf(stderr, "txt2html\nFile: %s\nError: %s.\n", text.name, FILE_OPEN_ERROR);
+			goto txt2html_error;
+		case 1:
+			fprintf(stderr, "txt2html\nError: Can't find the text '\n\n'.\n");
+			goto txt2html_error;
 	}
 
 	// Write to stream the last part of the html file.
+	output_file = fopen(html.name, "a");
 	fputs(html_content[2], output_file);
-
 	fclose(output_file);
+
 	skipotherprocess:;
 
     return 0;
