@@ -5,6 +5,8 @@
  * Date & time:  07/10/2022-09:12:05-PM
  */
 
+#include <assert.h>
+
 #include <getopt.h>
 #include <stdbool.h>
 #include <stdio.h>
@@ -19,13 +21,17 @@
 
 /* Error messages
  */
-#define NO_ARG_ERROR	"No argument or option is specified"
-#define NO_INPUT_FILE_ERROR	"No text file is specified for convertion"
-#define UNKNOWN_OPTION_ERROR	"The option specified is unknown"
+
 #define INVALID_INPUT_FILE_ERROR	"Can not convert the file"
 #define FILE_CREATE_ERROR	"Failed to create the file"
 #define FILE_OPEN_ERROR	"Failed to open the file for reading"
 #define FILE_EXIST_ERROR	"The file already exist"
+
+/* Warning messages
+ */
+#define NO_ARG_WARN	"No argument or option is specified"
+#define NO_INPUT_FILE_WARN	"No text file is specified for convertion"
+#define UNKNOWN_OPTION_WARN	"The option specified is unknown"
 
 /* Information messages
  */
@@ -94,7 +100,7 @@ int main(int argc, char *argv[]) {
 	int getopt_status, option_index = 0;
 
 	if (argc == 1) {
-		fprintf(stderr, "txt2html\nError: %s.\nInfo: %s.\n", NO_ARG_ERROR, GIVE_HELP_INFO);
+		fprintf(stderr, "txt2html\nWarning: %s.\nInfo: %s.\n", NO_ARG_WARN, GIVE_HELP_INFO);
 		goto txt2html_error;
 	}
 
@@ -129,7 +135,7 @@ int main(int argc, char *argv[]) {
 				goto skipotherprocess;
 			case 2:
 				if (argc == 3) {
-					fprintf(stderr, "txt2html\nError: %s.\n", NO_INPUT_FILE_ERROR);
+					fprintf(stderr, "txt2html\nWarning: %s.\n", NO_INPUT_FILE_WARN);
 					goto txt2html_error;
 				}
 				strcpy(html.page_title, optarg);
@@ -138,11 +144,11 @@ int main(int argc, char *argv[]) {
 				version();
 				goto skipotherprocess;
 			case ':':
-				fprintf(stderr, "txt2html\nOption: %s\nError: %s.\n", argv[optind - 1], NO_ARG_ERROR);
+				fprintf(stderr, "txt2html\nOption: %s\nWarning: %s.\n", argv[optind - 1], NO_ARG_WARN);
 				fprintf(stderr, "Info: %s.\n", GIVE_OPTION_INFO);
 				goto txt2html_error;
 			case '?':
-				fprintf(stderr, "txt2html\nOption: %s\nError: %s.\n", argv[optind - 1], UNKNOWN_OPTION_ERROR);
+				fprintf(stderr, "txt2html\nOption: %s\nWarning: %s.\n", argv[optind - 1], UNKNOWN_OPTION_WARN);
 				fprintf(stderr, "Info: %s.\n", GIVE_HELP_INFO);
 				goto txt2html_error;
         }
