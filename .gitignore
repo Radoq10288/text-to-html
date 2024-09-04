@@ -5,6 +5,7 @@
 include/
 obj/
 tests/
+stash/
 
 # File(s)
 *.exe
