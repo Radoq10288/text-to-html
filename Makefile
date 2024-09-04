@@ -15,20 +15,21 @@ OBJ=$(OBJDIR)/*.o
 CFILES=$(SRCDIR)/*.c
 
 CC=gcc
+LDFLAGS=-L./lib -lfstring_replace -lstring_replace
 
 debug: CFLAGS=-g -pedantic -Wall
-debug: build compile
+debug: build-lib build compile
 
-release: CFLAGS=-O2 -Wall
-release: build compile
+release: CFLAGS=-Os -Wall
+release: build-lib-rel build compile
 
 compile: $(BIN)
 $(BIN) : $(OBJ)
-	$(CC) -o $(BIN) $(OBJ)
+	$(CC) -o $(BIN) $(OBJ) $(LDFLAGS)
 
 build: $(OBJ)
 $(OBJ) : $(CFILES)
-	$(CC) -c $(CFILES) $(CFLAGS)
+	$(CC) -c $(CFILES) $(CFLAGS) -I./include
 
 	@mkdir -p $(OBJDIR)
 	@mkdir -p $(BINDIR)
@@ -40,9 +41,12 @@ clean: build-lib-clean
 
 distclean: clean
 	rmdir $(OBJDIR)
-	rm txt2html-source.tar
-	rm txt2html-release.tar
-	rm txt2html-debug.tar
+	ifeq *.html { rm *.html }
+	ifeq *.tar {
+		rm txt2html-source.tar
+		rm txt2html-release.tar
+		rm txt2html-debug.tar
+	}
 
 
 # To unit test
@@ -63,19 +67,48 @@ distclean-test:
 build-lib:
 	cd src/find-string && $(MAKE)
 	cd src/copy-sub-string && $(MAKE)
-	cd src/string-replace && $(MAKE)
-	cd src/file-string-replace && $(MAKE)
-	
+
 	cp src/find-string/libfind_string.a ./lib
 	cp src/copy-sub-string/libcopy_sub_string.a ./lib
+
+
+	cd src/string-replace && $(MAKE)
 	cp src/string-replace/libstring_replace.a ./lib
+
+
+	cp src/find-string/*.o src/file-string-replace/
+	cp src/copy-sub-string/*.o src/file-string-replace/
+	cp src/string-replace/*.o src/file-string-replace/
+
+
+	cd src/file-string-replace && $(MAKE)
+	cp src/file-string-replace/libfstring_replace.a ./lib
+
+build-lib-rel:
+	cd src/find-string && $(MAKE) release
+	cd src/copy-sub-string && $(MAKE) release
+
+	cp src/find-string/libfind_string.a ./lib
+	cp src/copy-sub-string/libcopy_sub_string.a ./lib
+
+
+	cd src/string-replace && $(MAKE) release
+	cp src/string-replace/libstring_replace.a ./lib
+
+
+	cp src/find-string/*.o src/file-string-replace/
+	cp src/copy-sub-string/*.o src/file-string-replace/
+	cp src/string-replace/*.o src/file-string-replace/
+
+
+	cd src/file-string-replace && $(MAKE) release
 	cp src/file-string-replace/libfstring_replace.a ./lib
 
 build-lib-clean:
-	rm src/find-string/libfind_string.a src/find-string/find_string.o
-	rm src/copy-sub-string/libcopy_sub_string.a src/copy-sub-string/copy_sub_string.o
-	rm src/string-replace/libstring_replace.a src/string-replace/string_replace.o
-	rm src/file-string-replace/libfstring_replace.a src/file-string-replace/file_string_replace.o
+	cd src/find-string && $(MAKE) clean
+	cd src/copy-sub-string && $(MAKE) clean
+	cd src/string-replace && $(MAKE) clean
+	cd src/file-string-replace && $(MAKE) clean
 
 
 # Archive all the files
