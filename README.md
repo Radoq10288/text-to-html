@@ -92,11 +92,7 @@ Observe the empty lines between the paragraphs. It will be used by the program t
 
 ## Issue
 
-Based on the test run using the provided sample text file, a minimal issue on the resulting html file still exist.<br/>
-<br/>
-The issue is, two blocks of a paragraph are put together in a single opening and closing paragraph tag that should be two separate paragraphs.<br/>
-<br/>
-But overall, the result has achieved the goal of producing a basic html file.<br/>
+Error detected upon valgrind check for memory leaks due to 'uninitialized value was created by a stack allocation'.<br/>
 <br/><br/>
 
 ## About
